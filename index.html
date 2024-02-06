@@ -36,18 +36,44 @@
     </div>
 
     <script>
-      const apikey = "380e20dfe2239218f55204ea8571609f";
+      const apiKey = "380e20dfe2239218f55204ea8571609f";
       const apiURL =
-        "https://api.openweathermap.org/data/2.5/weather? units=metric&q=banglore";
+        "https://api.openweathermap.org/data/2.5/weather?units=imperial&q=";
 
-      async function checkWeather() {
-        const response = await fetch(apiURL + `&appid=${apikey}`);
+      const searchBox = document.querySelector(".search input");
+      const searchBtn = document.querySelector(".search button");
+      const weatherIcon = document.querySelector(".weather-icon");
+
+      async function checkWeather(city) {
+        const response = await fetch(apiURL + city + `&appid=${apiKey}`);
         var data = await response.json();
 
         console.log(data);
-      }
 
-      checkWeather();
+        document.querySelector(".city").innerHTML = data.name;
+        document.querySelector(".temp").innerHTML =
+          Math.round(data.main.temp) + "°F";
+        document.querySelector(".humidity").innerHTML =
+          data.main.humidity + "%";
+        document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
+
+        if (data.weather[0].main == "Clouds") {
+          weatherIcon.src = "images 4/clouds.png";
+        } else if (data.weather[0].main == "Clear") {
+          weatherIcon.src = "images 4/clear.png";
+        } else if (data.weather[0].main == "Rain") {
+          weatherIcon.src = "images 4/rain.png";
+        }
+        if (data.weather[0].main == "Drizzle") {
+          weatherIcon.src = "images 4/drizzle.png";
+        }
+        if (data.weather[0].main == "Mist") {
+          weatherIcon.src = "images 4/mist.png";
+        }
+      }
+      searchBtn.addEventListener("click", () => {
+        checkWeather(searchBox.value);
+      });
     </script>
   </body>
 </html>
